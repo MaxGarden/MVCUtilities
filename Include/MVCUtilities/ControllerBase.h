@@ -2,26 +2,29 @@
 
 #include "ListenableBase.h"
 
-template<typename SuperClass, typename DataModelType, typename ListenerType>
-class CControllerBase : public CListenableBase<SuperClass, ListenerType>
+namespace MVC
 {
-public:
-    CControllerBase() = default;
-    virtual ~CControllerBase() override;
+    template<typename SuperClass, typename DataModelType, typename ListenerType>
+    class CControllerBase : public CListenableBase<SuperClass, ListenerType>
+    {
+    public:
+        CControllerBase() = default;
+        virtual ~CControllerBase() override;
 
-    virtual bool SetDataModel(const IDataModelSharedPtr& dataModel) override;
+        virtual bool SetDataModel(const IDataModelSharedPtr& dataModel) override;
 
-protected:
-    virtual void OnDataModelChanged();
-    virtual IListenerUniquePtr CreateListener();
+    protected:
+        virtual void OnDataModelChanged();
+        virtual IListenerUniquePtr CreateListener();
 
-    const std::shared_ptr<DataModelType>& GetDataModel() const noexcept;
+        const std::shared_ptr<DataModelType>& GetDataModel() const noexcept;
 
-    using Super = CControllerBase<SuperClass, DataModelType, ListenerType>;
+        using Super = CControllerBase<SuperClass, DataModelType, ListenerType>;
 
-private:
-    std::shared_ptr<DataModelType> m_DataModel;
-    ListenerHandle m_ListenerHandle;
-};
+    private:
+        std::shared_ptr<DataModelType> m_DataModel;
+        ListenerHandle m_ListenerHandle;
+    };
 
-#include "ControllerBase.inl"
+    #include "ControllerBase.inl"
+}

@@ -2,8 +2,11 @@
 
 #include "Listener.h"
 
-class IDataModel : public IListenable
+namespace MVC
 {
-public:
-    virtual ~IDataModel() = default;
-};
+    class IDataModel : public IListenable
+    {
+    public:
+        virtual ~IDataModel() = default;
+    };
+}

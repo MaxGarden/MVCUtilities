@@ -1,20 +1,23 @@
 #pragma once
 #include "MVCUtilities.h"
 
-using ListenerHandle = size_t;
-const ListenerHandle InvalidListenerHandle = 0;
-
-class IListener
+namespace MVC
 {
-public:
-    virtual ~IListener() = default;
-};
+    using ListenerHandle = size_t;
+    const ListenerHandle InvalidListenerHandle = 0;
 
-class IListenable
-{
-public:
-    virtual ~IListenable() = default;
+    class IListener
+    {
+    public:
+        virtual ~IListener() = default;
+    };
 
-    virtual std::optional<ListenerHandle> RegisterListener(IListenerUniquePtr&& listener) = 0;
-    virtual bool UnregisterListener(const ListenerHandle& handle) = 0;
-};
+    class IListenable
+    {
+    public:
+        virtual ~IListenable() = default;
+
+        virtual std::optional<ListenerHandle> RegisterListener(IListenerUniquePtr&& listener) = 0;
+        virtual bool UnregisterListener(const ListenerHandle& handle) = 0;
+    };
+}

@@ -3,7 +3,6 @@ PROJECT(MVCUtilities)
 
 SET(MVC_UTILITIES_SOURCES
     Include/MVCUtilities/MVCUtilities.h
-    Include/MVCUtilities/Pointers.h
     
     Include/MVCUtilities/DataModel.h
     Include/MVCUtilities/Controller.h

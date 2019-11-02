@@ -1,204 +1,207 @@
-template<typename Type>
-using VisitorType = std::function<void(Type&)>;
-
-template<typename Type>
-using ConstVisitorType = std::function<void(const Type&)>;
-
-template<typename Type>
-using InterruptibleVisitorType = std::function<bool(Type&)>; //continues visiting only if visitor returns true
-
-template<typename Type>
-using ConstInterruptibleVisitorType = std::function<bool(const Type&)>;
-
-template<typename ContainerType, typename InterruptibleVisitorType>
-inline void VisitPointersContainerInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+namespace MVC
 {
-    if (reverse)
+    template<typename Type>
+    using VisitorType = std::function<void(Type&)>;
+
+    template<typename Type>
+    using ConstVisitorType = std::function<void(const Type&)>;
+
+    template<typename Type>
+    using InterruptibleVisitorType = std::function<bool(Type&)>; //continues visiting only if visitor returns true
+
+    template<typename Type>
+    using ConstInterruptibleVisitorType = std::function<bool(const Type&)>;
+
+    template<typename ContainerType, typename InterruptibleVisitorType>
+    inline void VisitPointersContainerInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
     {
-        for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
+        if (reverse)
         {
-            if (auto& element = *iterator)
+            for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
             {
-                if (!visitor(*element))
+                if (auto& element = *iterator)
+                {
+                    if (!visitor(*element))
+                        return;
+                }
+            }
+        }
+        else
+        {
+            for (auto& element : container)
+            {
+                if (element)
+                {
+                    if (!visitor(*element))
+                        return;
+                }
+            }
+        }
+    }
+
+    template<typename ContainerType, typename VisitorType>
+    inline void VisitPointersContainer(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
+    {
+        const auto proxyVisitor = [&visitor](auto& element)
+        {
+            visitor(element);
+            return true;
+        };
+
+        VisitPointersContainerInterruptible(container, proxyVisitor, reverse);
+    }
+
+    template<typename ContainerType, typename InterruptibleVisitorType>
+    inline void VisitObjectsContainerInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+    {
+        if (reverse)
+        {
+            for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
+            {
+                if (!visitor(*iterator))
+                    return;
+            }
+        }
+        else
+        {
+            for (auto& element : container)
+            {
+                if (!visitor(element))
                     return;
             }
         }
     }
-    else
+
+    template<typename ContainerType, typename VisitorType>
+    inline void VisitObjectsContainer(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
     {
-        for (auto& element : container)
+        const auto proxyVisitor = [&visitor](auto& element)
         {
-            if (element)
+            visitor(element);
+            return true;
+        };
+
+        VisitObjectsContainerInterruptible(container, proxyVisitor, reverse);
+    }
+
+    template<typename ContainerType, typename InterruptibleVisitorType>
+    inline void VisitPointersMapInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+    {
+        if (reverse)
+        {
+            for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
             {
-                if (!visitor(*element))
-                    return;
+                if (const auto& value = iterator->second)
+                {
+                    if (!visitor(*value))
+                        return;
+                }
+            }
+        }
+        else
+        {
+            for (auto& pair : container)
+            {
+                if (auto& value = pair.second)
+                    visitor(*value);
             }
         }
     }
-}
 
-template<typename ContainerType, typename VisitorType>
-inline void VisitPointersContainer(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
-{
-    const auto proxyVisitor = [&visitor](auto& element)
+    template<typename ContainerType, typename VisitorType>
+    inline void VisitPointersMap(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
     {
-        visitor(element);
-        return true;
-    };
-
-    VisitPointersContainerInterruptible(container, proxyVisitor, reverse);
-}
-
-template<typename ContainerType, typename InterruptibleVisitorType>
-inline void VisitObjectsContainerInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
-{
-    if (reverse)
-    {
-        for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
+        const auto proxyVisitor = [&visitor](auto& element)
         {
-            if (!visitor(*iterator))
-                return;
-        }
+            visitor(element);
+            return true;
+        };
+
+        VisitPointersMapInterruptible(container, proxyVisitor, reverse);
     }
-    else
+
+    template<typename ContainerType, typename InterruptibleVisitorType>
+    inline void VisitObjectsMapInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
     {
-        for (auto& element : container)
+        if (reverse)
         {
-            if (!visitor(element))
-                return;
-        }
-    }
-}
-
-template<typename ContainerType, typename VisitorType>
-inline void VisitObjectsContainer(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
-{
-    const auto proxyVisitor = [&visitor](auto& element)
-    {
-        visitor(element);
-        return true;
-    };
-
-    VisitObjectsContainerInterruptible(container, proxyVisitor, reverse);
-}
-
-template<typename ContainerType, typename InterruptibleVisitorType>
-inline void VisitPointersMapInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
-{
-    if (reverse)
-    {
-        for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
-        {
-            if (const auto& value = iterator->second)
+            for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
             {
-                if (!visitor(*value))
+                if (!visitor(iterator->second))
                     return;
             }
         }
-    }
-    else
-    {
-        for (auto& pair : container)
+        else
         {
-            if (auto& value = pair.second)
-                visitor(*value);
+            for (auto& pair : container)
+                visitor(pair.second);
         }
     }
-}
 
-template<typename ContainerType, typename VisitorType>
-inline void VisitPointersMap(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
-{
-    const auto proxyVisitor = [&visitor](auto& element)
+    template<typename ContainerType, typename VisitorType>
+    inline void VisitObjectsMap(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
     {
-        visitor(element);
-        return true;
-    };
-
-    VisitPointersMapInterruptible(container, proxyVisitor, reverse);
-}
-
-template<typename ContainerType, typename InterruptibleVisitorType>
-inline void VisitObjectsMapInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
-{
-    if (reverse)
-    {
-        for (auto iterator = container.rbegin(); iterator != container.rend(); ++iterator)
+        const auto proxyVisitor = [&visitor](auto& element)
         {
-            if (!visitor(iterator->second))
+            visitor(element);
+            return true;
+        };
+
+        VisitObjectsMapInterruptible(container, proxyVisitor, reverse);
+    }
+
+    template<typename ContainerType, typename ValueType>
+    inline const auto RemoveFromContainer(ContainerType& container, const ValueType& value)
+    {
+        const auto iterator = std::remove(container.begin(), container.end(), value);
+
+        if (iterator == container.end())
+            return false;
+
+        container.erase(iterator, container.end());
+        return true;
+    }
+
+    template<typename KeyType, typename ValueType>
+    inline const auto RemoveFromContainer(std::map<KeyType, ValueType>& map, const KeyType& key)
+    {
+        const auto iterator = map.find(key);
+
+        if (iterator == map.end())
+            return false;
+
+        map.erase(iterator);
+        return true;
+    }
+
+    template<typename ClientServiceType, typename ClientController>
+    inline const auto GetClientService(const ClientController& clientController)
+    {
+        ClientServiceType* result = nullptr;
+        clientController.VisitServices([&result](auto& service)
+        {
+            if (result)
                 return;
+
+            result = dynamic_cast<ClientServiceType*>(&service);
+        });
+
+        return result;
+    }
+
+    class ScopedGuard
+    {
+    public:
+        ScopedGuard(std::function<void()>&& callback) noexcept :
+            m_Callback(std::move(callback)) {}
+
+        ~ScopedGuard()
+        {
+            if (m_Callback)
+                m_Callback();
         }
-    }
-    else
-    {
-        for (auto& pair : container)
-            visitor(pair.second);
-    }
-}
 
-template<typename ContainerType, typename VisitorType>
-inline void VisitObjectsMap(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
-{
-    const auto proxyVisitor = [&visitor](auto& element)
-    {
-        visitor(element);
-        return true;
+    private:
+        const std::function<void()> m_Callback;
     };
-
-    VisitObjectsMapInterruptible(container, proxyVisitor, reverse);
 }
-
-template<typename ContainerType, typename ValueType>
-inline const auto RemoveFromContainer(ContainerType& container, const ValueType& value)
-{
-    const auto iterator = std::remove(container.begin(), container.end(), value);
-
-    if (iterator == container.end())
-        return false;
-
-    container.erase(iterator, container.end());
-    return true;
-}
-
-template<typename KeyType, typename ValueType>
-inline const auto RemoveFromContainer(std::map<KeyType, ValueType>& map, const KeyType& key)
-{
-    const auto iterator = map.find(key);
-
-    if (iterator == map.end())
-        return false;
-
-    map.erase(iterator);
-    return true;
-}
-
-template<typename ClientServiceType, typename ClientController>
-inline const auto GetClientService(const ClientController& clientController)
-{
-    ClientServiceType* result = nullptr;
-    clientController.VisitServices([&result](auto& service)
-    {
-        if (result)
-            return;
-
-        result = dynamic_cast<ClientServiceType*>(&service);
-    });
-
-    return result;
-}
-
-class ScopedGuard
-{
-public:
-    ScopedGuard(std::function<void()>&& callback) noexcept :
-        m_Callback(std::move(callback)){}
-
-    ~ScopedGuard()
-    {
-        if (m_Callback)
-            m_Callback();
-    }
-
-private:
-    const std::function<void()> m_Callback;
-};

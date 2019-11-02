@@ -2,26 +2,29 @@
 
 #include "View.h"
 
-template<typename SuperClass, typename ControllerType>
-class CViewBase : public SuperClass
+namespace MVC
 {
-public:
-    CViewBase() = default;
-    virtual ~CViewBase() override = default;
+    template<typename SuperClass, typename ControllerType>
+    class CViewBase : public SuperClass
+    {
+    public:
+        CViewBase() = default;
+        virtual ~CViewBase() override = default;
 
-    virtual bool SetController(const IControllerSharedPtr& controller) override;
+        virtual bool SetController(const IControllerSharedPtr& controller) override;
 
-protected:
-    virtual void OnControllerChanged();
-    virtual IListenerUniquePtr CreateListener();
+    protected:
+        virtual void OnControllerChanged();
+        virtual IListenerUniquePtr CreateListener();
 
-    const std::shared_ptr<ControllerType>& GetController() const noexcept;
+        const std::shared_ptr<ControllerType>& GetController() const noexcept;
 
-    using Super = CViewBase<SuperClass, ControllerType>;
+        using Super = CViewBase<SuperClass, ControllerType>;
 
-private:
-    std::shared_ptr<ControllerType> m_Controller;
-    ListenerHandle m_ListenerHandle;
-};
+    private:
+        std::shared_ptr<ControllerType> m_Controller;
+        ListenerHandle m_ListenerHandle;
+    };
 
-#include "ViewBase.inl"
+    #include "ViewBase.inl"
+}

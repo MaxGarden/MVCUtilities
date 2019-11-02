@@ -2,10 +2,13 @@
 
 #include "Listener.h"
 
-class IController : public IListenable
+namespace MVC
 {
-public:
-    virtual ~IController() = default;
+    class IController : public IListenable
+    {
+    public:
+        virtual ~IController() = default;
 
-    virtual bool SetDataModel(const IDataModelSharedPtr& dataModel) = 0;
-};
+        virtual bool SetDataModel(const IDataModelSharedPtr& dataModel) = 0;
+    };
+}
