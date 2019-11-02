@@ -13,7 +13,7 @@ namespace MVC
     using ConstInterruptibleVisitorType = std::function<bool(const Type&)>;
 
     template<typename ContainerType, typename InterruptibleVisitorType>
-    inline void VisitPointersContainerInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitPointersContainerInterruptible(ContainerType& container, const InterruptibleVisitorType& visitor, bool reverse = false) noexcept
     {
         if (reverse)
         {
@@ -40,7 +40,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename VisitorType>
-    inline void VisitPointersContainer(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitPointersContainer(ContainerType& container, const VisitorType& visitor, bool reverse = false) noexcept
     {
         const auto proxyVisitor = [&visitor](auto& element)
         {
@@ -52,7 +52,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename InterruptibleVisitorType>
-    inline void VisitObjectsContainerInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitObjectsContainerInterruptible(ContainerType& container, const InterruptibleVisitorType& visitor, bool reverse = false) noexcept
     {
         if (reverse)
         {
@@ -73,7 +73,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename VisitorType>
-    inline void VisitObjectsContainer(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitObjectsContainer(ContainerType& container, const VisitorType& visitor, bool reverse = false) noexcept
     {
         const auto proxyVisitor = [&visitor](auto& element)
         {
@@ -85,7 +85,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename InterruptibleVisitorType>
-    inline void VisitPointersMapInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitPointersMapInterruptible(ContainerType& container, const InterruptibleVisitorType& visitor, bool reverse = false) noexcept
     {
         if (reverse)
         {
@@ -109,7 +109,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename VisitorType>
-    inline void VisitPointersMap(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitPointersMap(ContainerType& container, const VisitorType& visitor, bool reverse = false) noexcept
     {
         const auto proxyVisitor = [&visitor](auto& element)
         {
@@ -121,7 +121,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename InterruptibleVisitorType>
-    inline void VisitObjectsMapInterruptible(ContainerType& container, InterruptibleVisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitObjectsMapInterruptible(ContainerType& container, const InterruptibleVisitorType& visitor, bool reverse = false) noexcept
     {
         if (reverse)
         {
@@ -139,7 +139,7 @@ namespace MVC
     }
 
     template<typename ContainerType, typename VisitorType>
-    inline void VisitObjectsMap(ContainerType& container, VisitorType& visitor, bool reverse = false) noexcept
+    inline void VisitObjectsMap(ContainerType& container, const VisitorType& visitor, bool reverse = false) noexcept
     {
         const auto proxyVisitor = [&visitor](auto& element)
         {
