@@ -2,19 +2,19 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.14)
 PROJECT(MVCUtilities)
 
 SET(MVC_UTILITIES_SOURCES
-    Include/MVCUtilities/MVCUtilities.h
+    Include/MVC/MVCUtilities.h
     
-    Include/MVCUtilities/DataModel.h
-    Include/MVCUtilities/Controller.h
-    Include/MVCUtilities/ControllerBase.h
-    Include/MVCUtilities/ControllerBase.inl
-    Include/MVCUtilities/Listener.h
-    Include/MVCUtilities/ListenableBase.h
-    Include/MVCUtilities/ListenableBase.inl
-    Include/MVCUtilities/View.h
-    Include/MVCUtilities/ViewBase.h
-    Include/MVCUtilities/ViewBase.inl
-    Include/MVCUtilities/Utilities.h
+    Include/MVC/DataModel.h
+    Include/MVC/Controller.h
+    Include/MVC/ControllerBase.h
+    Include/MVC/ControllerBase.inl
+    Include/MVC/Listener.h
+    Include/MVC/ListenableBase.h
+    Include/MVC/ListenableBase.inl
+    Include/MVC/View.h
+    Include/MVC/ViewBase.h
+    Include/MVC/ViewBase.inl
+    Include/MVC/Utilities.h
 )
 
 ADD_LIBRARY(MVCUtilities STATIC ${MVC_UTILITIES_SOURCES})
