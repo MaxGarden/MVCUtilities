@@ -4,6 +4,7 @@
 #include <optional>
 #include <memory>
 #include <map>
+#include <functional>
 
 #include "Utilities.h"
 
