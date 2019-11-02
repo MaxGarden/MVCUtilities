@@ -5,7 +5,7 @@
 namespace MVC
 {
     template<typename SuperClass, typename DataModelType, typename ListenerType>
-    class ControllerBase : public CListenableBase<SuperClass, ListenerType>
+    class ControllerBase : public ListenableBase<SuperClass, ListenerType>
     {
     public:
         ControllerBase() = default;
@@ -22,8 +22,8 @@ namespace MVC
         using Super = ControllerBase<SuperClass, DataModelType, ListenerType>;
 
     private:
-        std::shared_ptr<DataModelType> m_DataModel;
-        ListenerHandle m_ListenerHandle;
+        std::shared_ptr<DataModelType> m_dataModel;
+        ListenerHandle m_listenerHandle;
     };
 
     #include "ControllerBase.inl"

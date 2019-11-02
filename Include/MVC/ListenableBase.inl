@@ -1,23 +1,23 @@
 template<typename SuperClass, typename ListenerType>
-std::optional<ListenerHandle> CListenableBase<SuperClass, ListenerType>::RegisterListener(IListenerUniquePtr&& listener)
+std::optional<ListenerHandle> ListenableBase<SuperClass, ListenerType>::RegisterListener(IListenerUniquePtr&& listener)
 {
     const auto castedListener = dynamic_cast<ListenerType*>(listener.get());
     if (!castedListener)
         return std::nullopt;
 
-    m_Listeners.emplace_back(std::unique_ptr<ListenerType>(castedListener));
+    m_listeners.emplace_back(std::unique_ptr<ListenerType>(castedListener));
     return reinterpret_cast<ListenerHandle>(listener.release());
 }
 
 template<typename SuperClass, typename ListenerType>
-bool CListenableBase<SuperClass, ListenerType>::UnregisterListener(const ListenerHandle& handle)
+bool ListenableBase<SuperClass, ListenerType>::UnregisterListener(const ListenerHandle& handle)
 {
-    const auto iterator = std::find_if(m_Listeners.begin(), m_Listeners.end(), [&handle](const auto& listener)
+    const auto iterator = std::find_if(m_listeners.begin(), m_listeners.end(), [&handle](const auto& listener)
     {
         return reinterpret_cast<ListenerHandle>(listener.get()) == handle;
     });
 
-    if (iterator == m_Listeners.end())
+    if (iterator == m_listeners.end())
         return false;
 
     iterator->reset();
@@ -26,13 +26,13 @@ bool CListenableBase<SuperClass, ListenerType>::UnregisterListener(const Listene
 
 template<typename SuperClass, typename ListenerType>
 template<typename ListenerMethod, typename... Arguments>
-void CListenableBase<SuperClass, ListenerType>::NotifyListeners(ListenerMethod method, Arguments&&... arguments)
+void ListenableBase<SuperClass, ListenerType>::NotifyListeners(ListenerMethod method, Arguments&&... arguments)
 {
-    for (const auto& listener : m_Listeners)
+    for (const auto& listener : m_listeners)
     {
         if (listener)
             (listener.get()->*method)(std::forward<Arguments>(arguments)...);
     }
 
-    RemoveFromContainer(m_Listeners, nullptr);
+    RemoveFromContainer(m_listeners, nullptr);
 }

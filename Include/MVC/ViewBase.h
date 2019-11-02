@@ -22,8 +22,8 @@ namespace MVC
         using Super = ViewBase<SuperClass, ControllerType>;
 
     private:
-        std::shared_ptr<ControllerType> m_Controller;
-        ListenerHandle m_ListenerHandle;
+        std::shared_ptr<ControllerType> m_controller;
+        ListenerHandle m_listenerHandle;
     };
 
     #include "ViewBase.inl"

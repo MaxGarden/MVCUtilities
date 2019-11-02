@@ -14,7 +14,7 @@ IListenerUniquePtr ViewBase<SuperClass, ControllerType>::CreateListener()
 template<typename SuperClass, typename ControllerType>
 const std::shared_ptr<ControllerType>& ViewBase<SuperClass, ControllerType>::GetController() const noexcept
 {
-    return m_Controller;
+    return m_controller;
 }
 
 template<typename SuperClass, typename ControllerType>
@@ -22,16 +22,16 @@ bool ViewBase<SuperClass, ControllerType>::SetController(const IControllerShared
 {
     const auto resetListener = [this]()
     {
-        if (m_Controller)
-            m_Controller->UnregisterListener(m_ListenerHandle);
+        if (m_controller)
+            m_controller->UnregisterListener(m_listenerHandle);
 
-        m_ListenerHandle = InvalidListenerHandle;
+        m_listenerHandle = InvalidListenerHandle;
     };
 
     if (!controller)
     {
         resetListener();
-        m_Controller.reset();
+        m_controller.reset();
         OnControllerChanged();
         return true;
     }
@@ -41,13 +41,13 @@ bool ViewBase<SuperClass, ControllerType>::SetController(const IControllerShared
         return false;
 
     resetListener();
-    m_Controller = std::move(castedController);
+    m_controller = std::move(castedController);
 
     if (auto listener = CreateListener())
     {
-        const auto listenerHandle = m_Controller->RegisterListener(std::move(listener));
+        const auto listenerHandle = m_controller->RegisterListener(std::move(listener));
         DEBUG_ASSERT(listenerHandle);
-        m_ListenerHandle = listenerHandle.value_or(m_ListenerHandle);
+        m_listenerHandle = listenerHandle.value_or(m_listenerHandle);
     }
 
     OnControllerChanged();

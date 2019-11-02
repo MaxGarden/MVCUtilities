@@ -19,7 +19,7 @@ namespace MVC
         void NotifyListeners(ListenerMethod method, Arguments&&... arguments);
 
     private:
-        std::vector<std::unique_ptr<ListenerType>> m_Listeners;
+        std::vector<std::unique_ptr<ListenerType>> m_listeners;
     };
 
     #include "ListenableBase.inl"

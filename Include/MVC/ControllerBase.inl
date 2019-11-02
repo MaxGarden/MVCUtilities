@@ -1,24 +1,24 @@
 template<typename SuperClass, typename DataModelType, typename ListenerType>
-CControllerBase<SuperClass, DataModelType, ListenerType>::~CControllerBase()
+ControllerBase<SuperClass, DataModelType, ListenerType>::~ControllerBase()
 {
     SetDataModel(nullptr);
 }
 
 template<typename SuperClass, typename DataModelType, typename ListenerType>
-bool CControllerBase<SuperClass, DataModelType, ListenerType>::SetDataModel(const IDataModelSharedPtr& dataModel)
+bool ControllerBase<SuperClass, DataModelType, ListenerType>::SetDataModel(const IDataModelSharedPtr& dataModel)
 {
     const auto resetListener = [this]()
     {
-        if (m_DataModel)
-            m_DataModel->UnregisterListener(m_ListenerHandle);
+        if (m_dataModel)
+            m_dataModel->UnregisterListener(m_listenerHandle);
 
-        m_ListenerHandle = InvalidListenerHandle;
+        m_listenerHandle = InvalidListenerHandle;
     };
 
     if (!dataModel)
     {
         resetListener();
-        m_DataModel.reset();
+        m_dataModel.reset();
         OnDataModelChanged();
         return true;
     }
@@ -28,13 +28,13 @@ bool CControllerBase<SuperClass, DataModelType, ListenerType>::SetDataModel(cons
         return false;
 
     resetListener();
-    m_DataModel = std::move(castedDataModel);
+    m_dataModel = std::move(castedDataModel);
 
     if (auto listener = CreateListener())
     {
-        const auto listenerHandle = m_DataModel->RegisterListener(std::move(listener));
+        const auto listenerHandle = m_dataModel->RegisterListener(std::move(listener));
         DEBUG_ASSERT(listenerHandle);
-        m_ListenerHandle = listenerHandle.value_or(m_ListenerHandle);
+        m_listenerHandle = listenerHandle.value_or(m_listenerHandle);
     }
 
     OnDataModelChanged();
@@ -43,20 +43,20 @@ bool CControllerBase<SuperClass, DataModelType, ListenerType>::SetDataModel(cons
 }
 
 template<typename SuperClass, typename DataModelType, typename ListenerType>
-void CControllerBase<SuperClass, DataModelType, ListenerType>::OnDataModelChanged()
+void ControllerBase<SuperClass, DataModelType, ListenerType>::OnDataModelChanged()
 {
     //to override
 }
 
 template<typename SuperClass, typename DataModelType, typename ListenerType>
-IListenerUniquePtr CControllerBase<SuperClass, DataModelType, ListenerType>::CreateListener()
+IListenerUniquePtr ControllerBase<SuperClass, DataModelType, ListenerType>::CreateListener()
 {
     //to override
     return nullptr;
 }
 
 template<typename SuperClass, typename DataModelType, typename ListenerType>
-const std::shared_ptr<DataModelType>& CControllerBase<SuperClass, DataModelType, ListenerType>::GetDataModel() const noexcept
+const std::shared_ptr<DataModelType>& ControllerBase<SuperClass, DataModelType, ListenerType>::GetDataModel() const noexcept
 {
-    return m_DataModel;
+    return m_dataModel;
 }
