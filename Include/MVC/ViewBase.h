@@ -5,11 +5,11 @@
 namespace MVC
 {
     template<typename SuperClass, typename ControllerType>
-    class CViewBase : public SuperClass
+    class ViewBase : public SuperClass
     {
     public:
-        CViewBase() = default;
-        virtual ~CViewBase() override = default;
+        ViewBase() = default;
+        virtual ~ViewBase() override = default;
 
         virtual bool SetController(const IControllerSharedPtr& controller) override;
 
@@ -19,7 +19,7 @@ namespace MVC
 
         const std::shared_ptr<ControllerType>& GetController() const noexcept;
 
-        using Super = CViewBase<SuperClass, ControllerType>;
+        using Super = ViewBase<SuperClass, ControllerType>;
 
     private:
         std::shared_ptr<ControllerType> m_Controller;

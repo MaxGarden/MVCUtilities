@@ -5,11 +5,11 @@
 namespace MVC
 {
     template<typename SuperClass, typename DataModelType, typename ListenerType>
-    class CControllerBase : public CListenableBase<SuperClass, ListenerType>
+    class ControllerBase : public CListenableBase<SuperClass, ListenerType>
     {
     public:
-        CControllerBase() = default;
-        virtual ~CControllerBase() override;
+        ControllerBase() = default;
+        virtual ~ControllerBase() override;
 
         virtual bool SetDataModel(const IDataModelSharedPtr& dataModel) override;
 
@@ -19,7 +19,7 @@ namespace MVC
 
         const std::shared_ptr<DataModelType>& GetDataModel() const noexcept;
 
-        using Super = CControllerBase<SuperClass, DataModelType, ListenerType>;
+        using Super = ControllerBase<SuperClass, DataModelType, ListenerType>;
 
     private:
         std::shared_ptr<DataModelType> m_DataModel;

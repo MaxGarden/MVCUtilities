@@ -1,24 +1,24 @@
 template<typename SuperClass, typename ControllerType>
-void CViewBase<SuperClass, ControllerType>::OnControllerChanged()
+void ViewBase<SuperClass, ControllerType>::OnControllerChanged()
 {
     //to override
 }
 
 template<typename SuperClass, typename ControllerType>
-IListenerUniquePtr CViewBase<SuperClass, ControllerType>::CreateListener()
+IListenerUniquePtr ViewBase<SuperClass, ControllerType>::CreateListener()
 {
     //to override
     return nullptr;
 }
 
 template<typename SuperClass, typename ControllerType>
-const std::shared_ptr<ControllerType>& CViewBase<SuperClass, ControllerType>::GetController() const noexcept
+const std::shared_ptr<ControllerType>& ViewBase<SuperClass, ControllerType>::GetController() const noexcept
 {
     return m_Controller;
 }
 
 template<typename SuperClass, typename ControllerType>
-bool CViewBase<SuperClass, ControllerType>::SetController(const IControllerSharedPtr& controller)
+bool ViewBase<SuperClass, ControllerType>::SetController(const IControllerSharedPtr& controller)
 {
     const auto resetListener = [this]()
     {
