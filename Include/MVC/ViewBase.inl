@@ -51,6 +51,5 @@ bool ViewBase<SuperClass, ControllerType>::SetController(const IControllerShared
     }
 
     OnControllerChanged();
-
     return true;
 }
